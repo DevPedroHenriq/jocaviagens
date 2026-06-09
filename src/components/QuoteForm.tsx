@@ -14,11 +14,28 @@ const formSchema = z.object({
   phone: z.string().min(10, "Telefone inválido").max(15, "Telefone inválido"),
   email: z.string().email("Email inválido").optional().or(z.literal("")),
   destination: z.string().min(1, "Selecione um destino"),
+  customDestination: z.string().optional(),
   travelers: z.string().min(1, "Informe o número de viajantes"),
-  period: z.string().min(1, "Informe o período desejado"),
-  budget: z.string().optional(),
+  periodStart: z.string().min(1, "Informe a data de início"),
+  periodEnd: z.string().min(1, "Informe a data de fim"),
   message: z.string().optional(),
-});
+}).refine(
+  (data) => {
+    if (data.destination === "Outro destino") {
+      return data.customDestination && data.customDestination.trim().length > 0;
+    }
+    return true;
+  },
+  { message: "Informe o destino desejado", path: ["customDestination"] }
+).refine(
+  (data) => {
+    if (data.periodStart && data.periodEnd) {
+      return data.periodEnd >= data.periodStart;
+    }
+    return true;
+  },
+  { message: "A data de fim deve ser após a data de início", path: ["periodEnd"] }
+);
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -32,45 +49,76 @@ const destinationOptions = [
   "Outro destino",
 ];
 
-const budgetOptions = [
-  "Até R$ 2.000",
-  "R$ 2.000 – R$ 4.000",
-  "R$ 4.000 – R$ 8.000",
-  "R$ 8.000 – R$ 15.000",
-  "Acima de R$ 15.000",
-  "Sem limite definido",
-];
-
 const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
   <svg viewBox="0 0 24 24" style={{ width: size, height: size, fill: "white", flexShrink: 0 }}>
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
   </svg>
 );
 
+function formatDate(dateStr: string): string {
+  if (!dateStr) return "";
+  const [year, month, day] = dateStr.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 export default function QuoteForm() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   const [submitted, setSubmitted] = useState(false);
+  const [sheetError, setSheetError] = useState(false);
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
 
+  const selectedDestination = watch("destination");
+  const isOtherDestination = selectedDestination === "Outro destino";
+
   const onSubmit = async (data: FormData) => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    setSheetError(false);
+
+    const finalDestination =
+      data.destination === "Outro destino"
+        ? data.customDestination || "Outro destino"
+        : data.destination;
+
+    const periodFormatted = `${formatDate(data.periodStart)} a ${formatDate(data.periodEnd)}`;
+
+    // 1. Enviar para a planilha via API route
+    try {
+      await fetch("/api/submit-form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: data.name,
+          whatsapp: data.phone,
+          email: data.email || "",
+          destino: finalDestination,
+          viajantes: data.travelers,
+          periodo_inicio: formatDate(data.periodStart),
+          periodo_fim: formatDate(data.periodEnd),
+          observacoes: data.message || "",
+          data_envio: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+        }),
+      });
+    } catch {
+      setSheetError(true);
+    }
+
+    // 2. Abrir WhatsApp (independente de erro na planilha)
     const msg =
       `🌍 *Solicitação de Orçamento — Joca Viagens*\n\n` +
       `👤 *Nome:* ${data.name}\n` +
       `📱 *Telefone:* ${data.phone}\n` +
       `${data.email ? `📧 *Email:* ${data.email}\n` : ""}` +
-      `🗺️ *Destino:* ${data.destination}\n` +
+      `🗺️ *Destino:* ${finalDestination}\n` +
       `👥 *Viajantes:* ${data.travelers}\n` +
-      `📅 *Período:* ${data.period}\n` +
-      `${data.budget ? `💰 *Orçamento:* ${data.budget}\n` : ""}` +
+      `📅 *Período:* ${periodFormatted}\n` +
       `${data.message ? `📝 *Observações:* ${data.message}\n` : ""}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank");
     setSubmitted(true);
@@ -88,6 +136,11 @@ export default function QuoteForm() {
     transition: "border-color 0.2s",
     fontFamily: "inherit",
     boxSizing: "border-box",
+  };
+
+  const dateInputStyle: React.CSSProperties = {
+    ...inputStyle,
+    colorScheme: "dark",
   };
 
   return (
@@ -192,8 +245,13 @@ export default function QuoteForm() {
                 <p style={{ color: "rgba(255,255,255,0.65)" }}>
                   Você foi redirecionado para o WhatsApp. O Joca entrará em contato em breve!
                 </p>
+                {sheetError && (
+                  <p style={{ color: "#fc8181", fontSize: "0.8rem" }}>
+                    ⚠️ Não foi possível registrar na planilha, mas sua mensagem foi enviada pelo WhatsApp!
+                  </p>
+                )}
                 <button
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => { setSubmitted(false); setSheetError(false); }}
                   style={{ background: "none", border: "none", color: "var(--copper-light)", cursor: "pointer", fontSize: "0.875rem", textDecoration: "underline" }}
                 >
                   Enviar outro orçamento
@@ -244,29 +302,65 @@ export default function QuoteForm() {
                   {errors.destination && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.destination.message}</p>}
                 </div>
 
-                {/* Travelers + Period */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
-                  <div>
-                    <label className="form-label">Nº de Viajantes *</label>
-                    <input {...register("travelers")} id="form-travelers" placeholder="Ex: 2 adultos" style={inputStyle} />
-                    {errors.travelers && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.travelers.message}</p>}
-                  </div>
-                  <div>
-                    <label className="form-label">Período Desejado *</label>
-                    <input {...register("period")} id="form-period" placeholder="Ex: Janeiro 2025" style={inputStyle} />
-                    {errors.period && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.period.message}</p>}
-                  </div>
+                {/* Custom Destination — shown only when "Outro destino" is selected */}
+                {isOtherDestination && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <label className="form-label">Qual o destino desejado? *</label>
+                    <input
+                      {...register("customDestination")}
+                      id="form-custom-destination"
+                      placeholder="Ex: Tailândia, Japão, Maldivas..."
+                      style={inputStyle}
+                    />
+                    {errors.customDestination && (
+                      <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>
+                        {errors.customDestination.message}
+                      </p>
+                    )}
+                  </motion.div>
+                )}
+
+                {/* Travelers */}
+                <div>
+                  <label className="form-label">Nº de Viajantes *</label>
+                  <input {...register("travelers")} id="form-travelers" placeholder="Ex: 2 adultos" style={inputStyle} />
+                  {errors.travelers && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.travelers.message}</p>}
                 </div>
 
-                {/* Budget */}
+                {/* Period — Start & End dates */}
                 <div>
-                  <label className="form-label">Orçamento Aproximado</label>
-                  <select {...register("budget")} id="form-budget" style={{ ...inputStyle, appearance: "none" as const }}>
-                    <option value="" style={{ background: "var(--navy)" }}>Selecione uma faixa</option>
-                    {budgetOptions.map(b => (
-                      <option key={b} value={b} style={{ background: "var(--navy)" }}>{b}</option>
-                    ))}
-                  </select>
+                  <label className="form-label">Período Desejado *</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
+                    <div>
+                      <label style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.72rem", fontWeight: 600, display: "block", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                        Data de início
+                      </label>
+                      <input
+                        {...register("periodStart")}
+                        id="form-period-start"
+                        type="date"
+                        style={dateInputStyle}
+                      />
+                      {errors.periodStart && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.periodStart.message}</p>}
+                    </div>
+                    <div>
+                      <label style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.72rem", fontWeight: 600, display: "block", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                        Data de fim
+                      </label>
+                      <input
+                        {...register("periodEnd")}
+                        id="form-period-end"
+                        type="date"
+                        style={dateInputStyle}
+                      />
+                      {errors.periodEnd && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.periodEnd.message}</p>}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Message */}
@@ -307,7 +401,7 @@ export default function QuoteForm() {
                   onMouseOver={e => !isSubmitting && ((e.currentTarget.style.background = "var(--copper-light)"), (e.currentTarget.style.transform = "scale(1.01)"))}
                   onMouseOut={e => ((e.currentTarget.style.background = "var(--copper)"), (e.currentTarget.style.transform = "scale(1)"))}
                 >
-                  {isSubmitting ? <><Loader2 size={20} style={{ animation: "spin 1s linear infinite" }} /> Preparando...</> : <><Send size={18} /> Enviar Orçamento pelo WhatsApp</>}
+                  {isSubmitting ? <><Loader2 size={20} style={{ animation: "spin 1s linear infinite" }} /> Enviando...</> : <><WhatsAppIcon size={20} /> Enviar Orçamento pelo WhatsApp</>}
                 </button>
 
                 <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.72rem", textAlign: "center" }}>
@@ -329,6 +423,10 @@ export default function QuoteForm() {
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          filter: invert(1) opacity(0.5);
+          cursor: pointer;
         }
       `}</style>
     </section>
