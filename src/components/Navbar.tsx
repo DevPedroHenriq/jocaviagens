@@ -13,7 +13,7 @@ const navLinks = [
   { label: "Orçamento", href: "#orcamento" },
 ];
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561980792722";
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

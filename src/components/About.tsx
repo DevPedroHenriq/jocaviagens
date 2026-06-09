@@ -5,7 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561980792722";
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
 const instagram = process.env.NEXT_PUBLIC_INSTAGRAM ?? "@jocaviagens";
 
 const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (

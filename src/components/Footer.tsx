@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Camera, MapPin, Heart } from "lucide-react";
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561980792722";
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
 
 const navLinks = [
   { label: "Início", href: "#inicio" },
@@ -139,7 +139,7 @@ export default function Footer() {
                 </div>
                 <div>
                   <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.7rem" }}>WhatsApp</p>
-                  <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.875rem", fontWeight: 600 }}>(61) 9 8079-2722</p>
+                  <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.875rem", fontWeight: 600 }}>(61) 99807-9272</p>
                 </div>
               </a>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>

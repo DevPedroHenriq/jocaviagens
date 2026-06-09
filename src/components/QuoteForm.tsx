@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561980792722";
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -189,7 +189,7 @@ export default function QuoteForm() {
                 ),
                 bg: "rgba(37,211,102,0.15)",
                 label: "WhatsApp",
-                value: "(61) 9 8079-2722",
+                value: "(61) 99807-9272",
                 href: `https://wa.me/${whatsappNumber}`,
               },
               { icon: "📍", bg: "rgba(160,112,58,0.15)", label: "Localização", value: "Brasília, DF — Brasil", href: undefined },
