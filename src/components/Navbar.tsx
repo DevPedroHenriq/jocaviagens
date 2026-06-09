@@ -134,7 +134,7 @@ export default function Navbar() {
               }}
             >
               <Phone size={15} />
-              Orçar no WhatsApp
+              Solicite sua proposta
             </a>
           </div>
 

@@ -122,7 +122,7 @@ export default function Hero() {
             >
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" id="hero-whatsapp-cta" className="jv-btn">
                 <WhatsAppIcon />
-                orce conosco agora mesmo
+                Solicite sua proposta
               </a>
               <a href="#destinos" id="hero-destinations-cta" className="jv-btn-outline">
                 <MapPin size={18} />
