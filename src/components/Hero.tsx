@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP;
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561980792722";
 
 const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: "20px", height: "20px", fill: "white", flexShrink: 0 }}>

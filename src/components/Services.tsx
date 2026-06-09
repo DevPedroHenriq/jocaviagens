@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Plane, Hotel, Bus, Ship, Compass, HeadphonesIcon } from "lucide-react";
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP;
+const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561980792722";
 
 const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
   <svg viewBox="0 0 24 24" style={{ width: size, height: size, fill: "white", flexShrink: 0 }}>
