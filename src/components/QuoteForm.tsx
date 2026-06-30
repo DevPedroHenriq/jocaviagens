@@ -5,6 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+// ─── EmailJS Config ────────────────────────────────────────────────────────────
+// Substitua pelos seus valores do painel EmailJS (emailjs.com)
+const EMAILJS_SERVICE_ID  = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID  || "";
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
+const EMAILJS_PUBLIC_KEY  = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY  || "";
+// ──────────────────────────────────────────────────────────────────────────────
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
 
@@ -86,6 +94,7 @@ export default function QuoteForm() {
 
     const periodFormatted = `${formatDate(data.periodStart)} a ${formatDate(data.periodEnd)}`;
 
+    // 1) Salvar na planilha via Google Apps Script
     try {
       await fetch("/api/submit-form", {
         method: "POST",
@@ -106,6 +115,30 @@ export default function QuoteForm() {
       setSheetError(true);
     }
 
+    // 2) Enviar e-mail de confirmação para o cliente via EmailJS
+    if (data.email && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY) {
+      try {
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          {
+            to_name:    data.name,
+            to_email:   data.email,
+            destino:    finalDestination,
+            viajantes:  data.travelers,
+            periodo:    periodFormatted,
+            mensagem:   data.message || "Nenhuma observação adicional.",
+            whatsapp:   data.phone,
+          },
+          EMAILJS_PUBLIC_KEY
+        );
+      } catch (err) {
+        console.error("Erro ao enviar e-mail de confirmação:", err);
+        // Não bloqueamos o fluxo se o e-mail falhar
+      }
+    }
+
+    // 3) Redirecionar para WhatsApp
     const msg =
       `🌍 *Solicitação de Orçamento — Joca Viagens*\n\n` +
       `👤 *Nome:* ${data.name}\n` +
