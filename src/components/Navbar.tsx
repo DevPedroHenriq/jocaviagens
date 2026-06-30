@@ -75,7 +75,7 @@ export default function Navbar() {
               id="nav-btn-vender-milhas"
               className="nav-milhas-btn"
             >
-              🎫 Vender suas milhas
+              🎫 Venda suas milhas
             </a>
 
             {/* Divider */}
@@ -167,7 +167,7 @@ export default function Navbar() {
               textDecoration: "none",
             }}
           >
-            🎫 Vender suas milhas
+            🎫 Venda suas milhas
           </a>
 
           <a
@@ -192,7 +192,7 @@ export default function Navbar() {
         .nav-link:hover, .nav-link--dark:hover { color:#A0703A; }
         .nav-milhas-btn { display:inline-flex; align-items:center; gap:0.4rem; background:linear-gradient(135deg,#1C1C2E,#2D2D44); color:white; padding:0.55rem 1.1rem; border-radius:9999px; font-size:0.8rem; font-weight:700; transition:transform 0.2s,box-shadow 0.2s; white-space:nowrap; border:1.5px solid rgba(160,112,58,0.5); text-decoration:none; }
         .nav-milhas-btn:hover { transform:scale(1.05); box-shadow:0 6px 20px rgba(160,112,58,0.35); background:linear-gradient(135deg,#A0703A,#C9914A); }
-        .nav-pill { display:inline-flex; align-items:center; gap:0.4rem; background:rgba(160,112,58,0.1); border:1px solid rgba(160,112,58,0.3); color:#A0703A; padding:0.5rem 1rem; border-radius:9999px; font-size:0.8rem; font-weight:600; transition:background 0.2s; text-decoration:none; }
+        .nav-pill { display:inline-flex; align-items:center; gap:0.4rem; background:rgba(160,112,58,0.1); border:1px solid rgba(160,112,58,0.3); color:#A0703A; padding:0.6rem 1.3rem; border-radius:9999px; font-size:0.875rem; font-weight:700; transition:background 0.2s; text-decoration:none; white-space:nowrap; }
         .nav-pill--dark { background:rgba(160,112,58,0.15); color:#C9914A; }
         .nav-pill:hover { background:rgba(160,112,58,0.25); }
         .nav-cta { display:inline-flex; align-items:center; gap:0.5rem; background:#A0703A; color:white; padding:0.7rem 1.4rem; border-radius:9999px; font-weight:700; font-size:0.875rem; transition:background 0.2s,transform 0.2s; box-shadow:0 4px 16px rgba(160,112,58,0.35); white-space:nowrap; text-decoration:none; }
