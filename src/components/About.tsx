@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
@@ -24,27 +22,15 @@ const differentials = [
 ];
 
 export default function About() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Olá Joca! Quero conhecer mais sobre a agência e fazer um orçamento!")}`;
   const igUrl = `https://instagram.com/${instagram.replace("@", "")}`;
 
   return (
-    <section
-      id="sobre"
-      style={{ background: "#FFFFFF", width: "100%", overflow: "hidden" }}
-      className="jv-section"
-    >
+    <section id="sobre" style={{ background: "#FFFFFF", width: "100%", overflow: "hidden" }} className="jv-section">
       <div className="jv-wrap">
         <div className="about-grid">
-
           {/* LEFT — Mascot & Visual */}
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
+          <div
             style={{
               position: "relative",
               display: "flex",
@@ -55,34 +41,15 @@ export default function About() {
             }}
           >
             {/* Background glow */}
-            <div style={{
-              position: "absolute",
-              width: "400px", height: "400px",
-              borderRadius: "9999px",
-              background: "radial-gradient(circle, rgba(160,112,58,0.1) 0%, transparent 70%)",
-              top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }} />
+            <div style={{ position: "absolute", width: "400px", height: "400px", borderRadius: "9999px", background: "radial-gradient(circle, rgba(160,112,58,0.1) 0%, transparent 70%)", top: "50%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none" }} />
 
-            {/* Logo — BIG */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
-              style={{ position: "relative", width: "280px", height: "84px", flexShrink: 0 }}
-            >
+            {/* Logo */}
+            <div style={{ position: "relative", width: "280px", height: "84px", flexShrink: 0 }}>
               <Image src="/logo.png" alt="Logo Joca Viagens" fill sizes="(max-width: 768px) 200px, 300px" style={{ objectFit: "contain" }} />
-            </motion.div>
+            </div>
 
-            {/* Mascot — BIG */}
-            <motion.div
-              className="jv-float"
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.4 }}
-              style={{ position: "relative", zIndex: 2, width: "min(380px, 90%)", mixBlendMode: "multiply" }}
-            >
+            {/* Mascot */}
+            <div className="jv-float" style={{ position: "relative", zIndex: 2, width: "min(380px, 90%)", mixBlendMode: "multiply" }}>
               <Image
                 src="/mascot.png"
                 alt="Mascote Joca Viagens"
@@ -90,65 +57,31 @@ export default function About() {
                 height={540}
                 style={{ objectFit: "contain", width: "100%", height: "auto", display: "block" }}
               />
-            </motion.div>
+            </div>
 
-            {/* Instagram Badge — BIG */}
-            <motion.a
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.6 }}
+            {/* Instagram Badge */}
+            <a
               href={igUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.75rem",
-                background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-                color: "white",
-                padding: "0.875rem 1.75rem",
-                borderRadius: "9999px",
-                fontSize: "1.0625rem",
-                fontWeight: 800,
-                boxShadow: "0 6px 24px rgba(131,58,180,0.35)",
-                transition: "transform 0.3s, box-shadow 0.3s",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-              onMouseOver={e => {
-                (e.currentTarget as HTMLElement).style.transform = "scale(1.06)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 10px 32px rgba(131,58,180,0.45)";
-              }}
-              onMouseOut={e => {
-                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 24px rgba(131,58,180,0.35)";
-              }}
+              className="ig-btn"
             >
-              {/* Instagram SVG */}
               <svg viewBox="0 0 24 24" style={{ width: 22, height: 22, fill: "white" }}>
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
               </svg>
               <span>{instagram}</span>
-            </motion.a>
+            </a>
 
             {/* Decorative dots */}
-            <div style={{
-              position: "absolute", top: "1rem", right: "1rem",
-              display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.375rem",
-              opacity: 0.2, pointerEvents: "none",
-            }}>
+            <div style={{ position: "absolute", top: "1rem", right: "1rem", display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.375rem", opacity: 0.2, pointerEvents: "none" }}>
               {Array.from({ length: 25 }).map((_, i) => (
                 <div key={i} style={{ width: "6px", height: "6px", borderRadius: "9999px", background: "#A0703A" }} />
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* RIGHT — Text */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div>
             <span className="jv-badge" style={{ marginBottom: "1.25rem", display: "inline-flex" }}>
               🙋 Sobre a Joca Viagens
             </span>
@@ -173,25 +106,14 @@ export default function About() {
 
             {/* Differentials */}
             <ul style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.875rem 1.5rem", marginBottom: "2rem", listStyle: "none" }}>
-              {differentials.map((item, i) => (
-                <motion.li
+              {differentials.map((item) => (
+                <li
                   key={item}
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.4 + i * 0.1 }}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "0.5rem",
-                    fontSize: "0.875rem",
-                    color: "#1C1C2E",
-                    fontWeight: 500,
-                    lineHeight: 1.45,
-                  }}
+                  style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", fontSize: "0.875rem", color: "#1C1C2E", fontWeight: 500, lineHeight: 1.45 }}
                 >
                   <CheckCircle2 size={17} style={{ color: "#A0703A", flexShrink: 0, marginTop: "1px" }} />
                   {item}
-                </motion.li>
+                </li>
               ))}
             </ul>
 
@@ -213,10 +135,13 @@ export default function About() {
               <WhatsAppIcon />
               Solicitar via WhatsApp
             </a>
-          </motion.div>
-
+          </div>
         </div>
       </div>
+      <style>{`
+        .ig-btn { display:inline-flex; align-items:center; gap:0.75rem; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:white; padding:0.875rem 1.75rem; border-radius:9999px; font-size:1.0625rem; font-weight:800; box-shadow:0 6px 24px rgba(131,58,180,0.35); transition:transform 0.3s,box-shadow 0.3s; text-decoration:none; }
+        .ig-btn:hover { transform:scale(1.06); box-shadow:0 10px 32px rgba(131,58,180,0.45); }
+      `}</style>
     </section>
   );
 }

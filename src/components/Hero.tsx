@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
@@ -42,7 +41,7 @@ export default function Hero() {
         <circle cx="1350" cy="180" r="8" fill="#A0703A" />
       </svg>
 
-      {/* Animated plane */}
+      {/* Animated plane — CSS only */}
       <div className="jv-fly" style={{ position: "absolute", top: "28%", left: 0, pointerEvents: "none", zIndex: 1 }}>
         <svg viewBox="0 0 24 24" style={{ width: 28, height: 28, fill: "var(--copper)", opacity: 0.5, transform: "rotate(45deg)" }}>
           <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
@@ -52,55 +51,26 @@ export default function Hero() {
       <div className="jv-wrap" style={{ paddingTop: "8rem", paddingBottom: "4rem", width: "100%" }}>
         <div className="jv-grid-2" style={{ width: "100%" }}>
           {/* LEFT — Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <div>
             {/* Badge */}
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              <span className="jv-badge" style={{ marginBottom: "1.5rem", display: "inline-flex" }}>
-                <Star size={13} fill="var(--copper)" />
-                Agência de Viagens Especializada
-                <Star size={13} fill="var(--copper)" />
-              </span>
-            </motion.div>
+            <span className="jv-badge" style={{ marginBottom: "1.5rem", display: "inline-flex" }}>
+              <Star size={13} fill="var(--copper)" />
+              Agência de Viagens Especializada
+              <Star size={13} fill="var(--copper)" />
+            </span>
 
             {/* Main Heading */}
-            <motion.h1
+            <h1
               className="hero-title"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
               style={{ marginBottom: "1.25rem" }}
             >
               Sua próxima{" "}
-              <span style={{ position: "relative", display: "inline-block" }}>
-                <span style={{ color: "var(--copper)" }}>viagem</span>
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 1.0, duration: 0.6 }}
-                  style={{
-                    position: "absolute",
-                    bottom: "-4px",
-                    left: 0,
-                    right: 0,
-                    height: "3px",
-                    backgroundColor: "var(--copper)",
-                    borderRadius: "9999px",
-                    transformOrigin: "left",
-                  }}
-                />
-              </span>
+              <span style={{ color: "var(--copper)" }}>viagem</span>
               <br />
               começa aqui.
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+            <p
               style={{
                 color: "var(--text-muted)",
                 fontSize: "clamp(1rem, 2vw, 1.125rem)",
@@ -111,15 +81,10 @@ export default function Hero() {
             >
               Realizamos o sonho da sua viagem com os melhores pacotes nacionais e
               internacionais. Passagens, hotéis e experiências inesquecíveis, tudo num só lugar!
-            </motion.p>
+            </p>
 
             {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" }}
-            >
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" }}>
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" id="hero-whatsapp-cta" className="jv-btn">
                 <WhatsAppIcon />
                 Solicite sua proposta
@@ -128,15 +93,10 @@ export default function Hero() {
                 <MapPin size={18} />
                 Ver Destinos
               </a>
-            </motion.div>
+            </div>
 
             {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              style={{ display: "flex", gap: "2.5rem" }}
-            >
+            <div style={{ display: "flex", gap: "2.5rem" }}>
               {[
                 { value: "500+", label: "Clientes felizes" },
                 { value: "50+", label: "Destinos" },
@@ -147,15 +107,10 @@ export default function Hero() {
                   <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 500, marginTop: "0.25rem" }}>{stat.label}</p>
                 </div>
               ))}
-            </motion.div>
+            </div>
 
             {/* Services icons */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
-              style={{ display: "flex", gap: "1rem", marginTop: "2.5rem", flexWrap: "wrap" }}
-            >
+            <div style={{ display: "flex", gap: "1rem", marginTop: "2.5rem", flexWrap: "wrap" }}>
               {[
                 { icon: "✈️", label: "Passagens" },
                 { icon: "🏨", label: "Hotéis" },
@@ -169,7 +124,6 @@ export default function Hero() {
                     alignItems: "center",
                     gap: "0.5rem",
                     background: "rgba(255,255,255,0.6)",
-                    backdropFilter: "blur(8px)",
                     borderRadius: "1rem",
                     padding: "1rem 1.25rem",
                     border: "1px solid rgba(160,112,58,0.2)",
@@ -193,10 +147,10 @@ export default function Hero() {
                   <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--navy)" }}>{item.label}</span>
                 </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* RIGHT — Mascot + Floating Cards */}
+          {/* RIGHT — Mascot */}
           <div
             style={{
               position: "relative",
@@ -206,11 +160,8 @@ export default function Hero() {
               minHeight: "480px",
             }}
           >
-            {/* Glow circle behind mascot */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
+            {/* Glow */}
+            <div
               style={{
                 position: "absolute",
                 inset: 0,
@@ -228,16 +179,10 @@ export default function Hero() {
                   background: "radial-gradient(circle, rgba(160,112,58,0.18) 0%, transparent 70%)",
                 }}
               />
-            </motion.div>
+            </div>
 
             {/* Mascote */}
-            <motion.div
-              className="jv-float"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              style={{ position: "relative", zIndex: 10, maxWidth: "360px", width: "100%", mixBlendMode: "multiply" }}
-            >
+            <div className="jv-float" style={{ position: "relative", zIndex: 10, maxWidth: "360px", width: "100%", mixBlendMode: "multiply" }}>
               <Image
                 src="/mascot.png"
                 alt="Mascote Joca Viagens"
@@ -246,13 +191,10 @@ export default function Hero() {
                 style={{ objectFit: "contain", width: "100%", height: "auto", maxWidth: "360px", display: "block" }}
                 priority
               />
-            </motion.div>
+            </div>
 
             {/* Floating card — destination */}
-            <motion.div
-              initial={{ opacity: 0, y: 24, x: -16 }}
-              animate={{ opacity: 1, y: 0, x: 0 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
+            <div
               style={{
                 position: "absolute",
                 top: "1.5rem",
@@ -288,13 +230,10 @@ export default function Hero() {
                 <p style={{ fontSize: "0.875rem", fontWeight: 700, color: "var(--navy)" }}>Paris, França</p>
                 <p style={{ fontSize: "0.75rem", color: "var(--copper)", fontWeight: 600 }}>A partir de R$ 3.890</p>
               </div>
-            </motion.div>
+            </div>
 
             {/* Floating card — review */}
-            <motion.div
-              initial={{ opacity: 0, y: -24, x: 16 }}
-              animate={{ opacity: 1, y: 0, x: 0 }}
-              transition={{ delay: 1.1, duration: 0.6 }}
+            <div
               style={{
                 position: "absolute",
                 bottom: "5rem",
@@ -318,16 +257,13 @@ export default function Hero() {
                 &ldquo;Melhor agência que já usei! Perfeito do início ao fim.&rdquo;
               </p>
               <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--copper)", marginTop: "0.25rem" }}>— Maria S.</p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+      {/* Scroll indicator — CSS only */}
+      <div
         style={{
           position: "absolute",
           bottom: "2rem",
@@ -341,9 +277,7 @@ export default function Hero() {
         }}
       >
         <span style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" }}>Role para ver</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
+        <div
           style={{
             width: "1.25rem",
             height: "2rem",
@@ -355,9 +289,9 @@ export default function Hero() {
             paddingTop: "0.375rem",
           }}
         >
-          <div style={{ width: "4px", height: "8px", background: "var(--copper)", borderRadius: "9999px" }} />
-        </motion.div>
-      </motion.div>
+          <div style={{ width: "4px", height: "8px", background: "var(--copper)", borderRadius: "9999px", animation: "jv-float 1.5s ease-in-out infinite" }} />
+        </div>
+      </div>
     </section>
   );
 }

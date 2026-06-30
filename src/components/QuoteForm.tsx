@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -62,8 +61,6 @@ function formatDate(dateStr: string): string {
 }
 
 export default function QuoteForm() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
   const [submitted, setSubmitted] = useState(false);
   const [sheetError, setSheetError] = useState(false);
 
@@ -89,7 +86,6 @@ export default function QuoteForm() {
 
     const periodFormatted = `${formatDate(data.periodStart)} a ${formatDate(data.periodEnd)}`;
 
-    // 1. Enviar para a planilha via API route
     try {
       await fetch("/api/submit-form", {
         method: "POST",
@@ -110,7 +106,6 @@ export default function QuoteForm() {
       setSheetError(true);
     }
 
-    // 2. Abrir WhatsApp (independente de erro na planilha)
     const msg =
       `🌍 *Solicitação de Orçamento — Joca Viagens*\n\n` +
       `👤 *Nome:* ${data.name}\n` +
@@ -124,7 +119,7 @@ export default function QuoteForm() {
     setSubmitted(true);
   };
 
-  const inputStyle: React.CSSProperties = {
+  const inp: React.CSSProperties = {
     width: "100%",
     background: "rgba(255,255,255,0.08)",
     border: "1px solid rgba(255,255,255,0.18)",
@@ -138,40 +133,20 @@ export default function QuoteForm() {
     boxSizing: "border-box",
   };
 
-  const dateInputStyle: React.CSSProperties = {
-    ...inputStyle,
-    colorScheme: "dark",
-  };
-
   return (
-    <section
-      id="orcamento"
-      style={{ background: "var(--navy)", width: "100%", position: "relative", overflow: "hidden" }}
-      className="jv-section"
-    >
+    <section id="orcamento" style={{ background: "var(--navy)", width: "100%", position: "relative", overflow: "hidden" }} className="jv-section">
       {/* Decorative radial */}
-      <div style={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        background: "radial-gradient(circle at 15% 50%, rgba(160,112,58,0.1) 0%, transparent 50%), radial-gradient(circle at 85% 20%, rgba(201,145,74,0.08) 0%, transparent 40%)",
-      }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(circle at 15% 50%, rgba(160,112,58,0.1) 0%, transparent 50%), radial-gradient(circle at 85% 20%, rgba(201,145,74,0.08) 0%, transparent 40%)" }} />
 
       <div className="jv-wrap" style={{ position: "relative", zIndex: 1 }}>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr", gap: "4rem", alignItems: "start" }}
-          className="quote-grid"
-        >
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "4rem", alignItems: "start" }} className="quote-grid">
           {/* Left — Info */}
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: -36 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
-          >
+          <div>
             <span className="jv-badge" style={{ marginBottom: "1.5rem", display: "inline-flex", background: "rgba(160,112,58,0.2)", borderColor: "rgba(160,112,58,0.3)", color: "var(--copper-light)" }}>
               📋 Solicitar Orçamento
             </span>
             <h2 className="section-title font-playfair" style={{ color: "white", textAlign: "left", marginBottom: "1rem" }}>
-              Solicitar via WhatsApp
+              Solicitar via WhatsApp{" "}
               <span style={{ color: "var(--copper-light)" }}>É grátis e rápido.</span>
             </h2>
             <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "1rem", lineHeight: 1.75, marginBottom: "2.5rem" }}>
@@ -197,12 +172,8 @@ export default function QuoteForm() {
             ].map((item, i) => {
               const content = (
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                  <div style={{
-                    width: "3rem", height: "3rem", borderRadius: "0.875rem",
-                    background: item.bg, display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1.25rem", flexShrink: 0,
-                  }}>
-                    {typeof item.icon === "string" ? item.icon : item.icon}
+                  <div style={{ width: "3rem", height: "3rem", borderRadius: "0.875rem", background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem", flexShrink: 0 }}>
+                    {item.icon}
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>{item.label}</p>
@@ -218,26 +189,12 @@ export default function QuoteForm() {
                 <div key={i} style={{ marginBottom: "1rem" }}>{content}</div>
               );
             })}
-          </motion.div>
+          </div>
 
           {/* Right — Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 36 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div>
             {submitted ? (
-              <div style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "1.5rem",
-                padding: "3rem 2rem",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                gap: "1rem",
-              }}>
+              <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "1.5rem", padding: "3rem 2rem", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "1rem" }}>
                 <CheckCircle2 size={64} color="#25D366" />
                 <h3 className="font-playfair" style={{ fontSize: "1.5rem", fontWeight: 900, color: "white" }}>
                   Mensagem enviada! 🎉
@@ -260,20 +217,12 @@ export default function QuoteForm() {
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "1.5rem",
-                  padding: "2rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "1.5rem", padding: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}
               >
                 {/* Name */}
                 <div>
                   <label className="form-label">Seu Nome *</label>
-                  <input {...register("name")} id="form-name" placeholder="Ex: João Silva" style={inputStyle} />
+                  <input {...register("name")} id="form-name" placeholder="Ex: João Silva" style={inp} />
                   {errors.name && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.name.message}</p>}
                 </div>
 
@@ -281,19 +230,19 @@ export default function QuoteForm() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
                   <div>
                     <label className="form-label">WhatsApp *</label>
-                    <input {...register("phone")} id="form-phone" placeholder="(61) 9 9999-9999" style={inputStyle} />
+                    <input {...register("phone")} id="form-phone" placeholder="(61) 9 9999-9999" style={inp} />
                     {errors.phone && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.phone.message}</p>}
                   </div>
                   <div>
                     <label className="form-label">Email (opcional)</label>
-                    <input {...register("email")} id="form-email" type="email" placeholder="seu@email.com" style={inputStyle} />
+                    <input {...register("email")} id="form-email" type="email" placeholder="seu@email.com" style={inp} />
                   </div>
                 </div>
 
                 {/* Destination */}
                 <div>
                   <label className="form-label">Destino Desejado *</label>
-                  <select {...register("destination")} id="form-destination" style={{ ...inputStyle, appearance: "none" as const }}>
+                  <select {...register("destination")} id="form-destination" style={{ ...inp, appearance: "none" as const }}>
                     <option value="" style={{ background: "var(--navy)" }}>Selecione um destino</option>
                     {destinationOptions.map(d => (
                       <option key={d} value={d} style={{ background: "var(--navy)" }}>{d}</option>
@@ -302,62 +251,34 @@ export default function QuoteForm() {
                   {errors.destination && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.destination.message}</p>}
                 </div>
 
-                {/* Custom Destination — shown only when "Outro destino" is selected */}
+                {/* Custom Destination */}
                 {isOtherDestination && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <div>
                     <label className="form-label">Qual o destino desejado? *</label>
-                    <input
-                      {...register("customDestination")}
-                      id="form-custom-destination"
-                      placeholder="Ex: Tailândia, Japão, Maldivas..."
-                      style={inputStyle}
-                    />
-                    {errors.customDestination && (
-                      <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>
-                        {errors.customDestination.message}
-                      </p>
-                    )}
-                  </motion.div>
+                    <input {...register("customDestination")} id="form-custom-destination" placeholder="Ex: Tailândia, Japão, Maldivas..." style={inp} />
+                    {errors.customDestination && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.customDestination.message}</p>}
+                  </div>
                 )}
 
                 {/* Travelers */}
                 <div>
                   <label className="form-label">Nº de Viajantes *</label>
-                  <input {...register("travelers")} id="form-travelers" placeholder="Ex: 2 adultos" style={inputStyle} />
+                  <input {...register("travelers")} id="form-travelers" placeholder="Ex: 2 adultos" style={inp} />
                   {errors.travelers && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.travelers.message}</p>}
                 </div>
 
-                {/* Period — Start & End dates */}
+                {/* Period */}
                 <div>
                   <label className="form-label">Período Desejado *</label>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
                     <div>
-                      <label style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.72rem", fontWeight: 600, display: "block", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                        Data de início
-                      </label>
-                      <input
-                        {...register("periodStart")}
-                        id="form-period-start"
-                        type="date"
-                        style={dateInputStyle}
-                      />
+                      <label style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.72rem", fontWeight: 600, display: "block", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>Data de início</label>
+                      <input {...register("periodStart")} id="form-period-start" type="date" style={{ ...inp, colorScheme: "dark" }} />
                       {errors.periodStart && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.periodStart.message}</p>}
                     </div>
                     <div>
-                      <label style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.72rem", fontWeight: 600, display: "block", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                        Data de fim
-                      </label>
-                      <input
-                        {...register("periodEnd")}
-                        id="form-period-end"
-                        type="date"
-                        style={dateInputStyle}
-                      />
+                      <label style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.72rem", fontWeight: 600, display: "block", marginBottom: "0.4rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>Data de fim</label>
+                      <input {...register("periodEnd")} id="form-period-end" type="date" style={{ ...inp, colorScheme: "dark" }} />
                       {errors.periodEnd && <p style={{ color: "#fc8181", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.periodEnd.message}</p>}
                     </div>
                   </div>
@@ -366,13 +287,7 @@ export default function QuoteForm() {
                 {/* Message */}
                 <div>
                   <label className="form-label">Alguma observação?</label>
-                  <textarea
-                    {...register("message")}
-                    id="form-message"
-                    rows={3}
-                    placeholder="Ex: viagem de lua de mel, tenho criança pequena..."
-                    style={{ ...inputStyle, resize: "none" as const }}
-                  />
+                  <textarea {...register("message")} id="form-message" rows={3} placeholder="Ex: viagem de lua de mel, tenho criança pequena..." style={{ ...inp, resize: "none" as const }} />
                 </div>
 
                 {/* Submit */}
@@ -380,28 +295,10 @@ export default function QuoteForm() {
                   type="submit"
                   id="form-submit"
                   disabled={isSubmitting}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "0.75rem",
-                    width: "100%",
-                    background: "var(--copper)",
-                    color: "white",
-                    padding: "1rem",
-                    borderRadius: "0.875rem",
-                    fontWeight: 700,
-                    fontSize: "1rem",
-                    border: "none",
-                    cursor: isSubmitting ? "not-allowed" : "pointer",
-                    opacity: isSubmitting ? 0.65 : 1,
-                    transition: "all 0.3s",
-                    fontFamily: "inherit",
-                  }}
-                  onMouseOver={e => !isSubmitting && ((e.currentTarget.style.background = "var(--copper-light)"), (e.currentTarget.style.transform = "scale(1.01)"))}
-                  onMouseOut={e => ((e.currentTarget.style.background = "var(--copper)"), (e.currentTarget.style.transform = "scale(1)"))}
+                  className="qf-submit"
+                  style={{ opacity: isSubmitting ? 0.65 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
                 >
-                  {isSubmitting ? <><Loader2 size={20} style={{ animation: "spin 1s linear infinite" }} /> Enviando...</> : <><WhatsAppIcon size={20} /> Enviar Orçamento pelo WhatsApp</>}
+                  {isSubmitting ? <><Loader2 size={20} className="spin" /> Enviando...</> : <><WhatsAppIcon size={20} /> Enviar Orçamento pelo WhatsApp</>}
                 </button>
 
                 <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.72rem", textAlign: "center" }}>
@@ -409,25 +306,16 @@ export default function QuoteForm() {
                 </p>
               </form>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
 
-      <style jsx global>{`
-        @media (min-width: 1024px) {
-          .quote-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-        @media (max-width: 580px) {
-          .form-row { grid-template-columns: 1fr !important; }
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-          filter: invert(1) opacity(0.5);
-          cursor: pointer;
-        }
+      <style>{`
+        @media (min-width: 1024px) { .quote-grid { grid-template-columns: 1fr 1fr !important; } }
+        @media (max-width: 580px) { .form-row { grid-template-columns: 1fr !important; } }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.5); cursor: pointer; }
+        .qf-submit { display:flex; align-items:center; justify-content:center; gap:0.75rem; width:100%; background:var(--copper); color:white; padding:1rem; border-radius:0.875rem; font-weight:700; font-size:1rem; border:none; transition:background 0.2s,transform 0.2s; font-family:inherit; }
+        .qf-submit:hover:not(:disabled) { background:var(--copper-light); transform:scale(1.01); }
       `}</style>
     </section>
   );

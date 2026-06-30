@@ -1,8 +1,6 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
 import { MapPin, Clock, Users, Star } from "lucide-react";
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || "5561998079272";
@@ -14,101 +12,19 @@ const WhatsAppIcon = ({ size = 16 }: { size?: number }) => (
 );
 
 const destinations = [
-  {
-    id: 1,
-    name: "Paris, França",
-    emoji: "🗼",
-    image: "/paris.png",
-    price: "R$ 3.890",
-    duration: "7 dias",
-    rating: 4.9,
-    reviews: 128,
-    tags: ["Europa", "Romântico", "Cultural"],
-    highlight: "Torre Eiffel & Museu do Louvre",
-    message: "Olá Joca! Tenho interesse no pacote Paris, França. Pode me passar mais informações?",
-  },
-  {
-    id: 2,
-    name: "Cancún, México",
-    emoji: "🏖️",
-    image: "/cancun.png",
-    price: "R$ 2.490",
-    duration: "5 dias",
-    rating: 4.8,
-    reviews: 95,
-    tags: ["Caribe", "Praia", "All Inclusive"],
-    highlight: "Praias paradisíacas & Cenotes",
-    message: "Olá Joca! Tenho interesse no pacote Cancún, México. Pode me passar mais informações?",
-  },
-  {
-    id: 3,
-    name: "Rio de Janeiro, Brasil",
-    emoji: "🌆",
-    image: "/rio.png",
-    price: "R$ 1.290",
-    duration: "4 dias",
-    rating: 4.7,
-    reviews: 210,
-    tags: ["Brasil", "Carnaval", "Natureza"],
-    highlight: "Cristo Redentor & Pão de Açúcar",
-    message: "Olá Joca! Tenho interesse no pacote Rio de Janeiro. Pode me passar mais informações?",
-  },
-  {
-    id: 4,
-    name: "Lisboa, Portugal",
-    emoji: "🏛️",
-    image: "/lisboa.png",
-    price: "R$ 4.200",
-    duration: "8 dias",
-    rating: 4.9,
-    reviews: 76,
-    tags: ["Europa", "História", "Gastronomia"],
-    highlight: "Alfama & Belém",
-    message: "Olá Joca! Tenho interesse no pacote Lisboa, Portugal. Pode me passar mais informações?",
-  },
-  {
-    id: 5,
-    name: "Dubai, EAU",
-    emoji: "🌇",
-    image: "/dubai.png",
-    price: "R$ 5.890",
-    duration: "6 dias",
-    rating: 4.8,
-    reviews: 52,
-    tags: ["Luxo", "Arquitetura", "Compras"],
-    highlight: "Burj Khalifa & Desert Safari",
-    message: "Olá Joca! Tenho interesse no pacote Dubai. Pode me passar mais informações?",
-  },
-  {
-    id: 6,
-    name: "Fernando de Noronha",
-    emoji: "🏝️",
-    image: "/noronha.png",
-    price: "R$ 3.100",
-    duration: "5 dias",
-    rating: 5.0,
-    reviews: 164,
-    tags: ["Brasil", "Natureza", "Mergulho"],
-    highlight: "Baía dos Golfinhos & Enseada",
-    message: "Olá Joca! Tenho interesse no pacote Fernando de Noronha. Pode me passar mais informações?",
-  },
+  { id: 1, name: "Paris, França", emoji: "🗼", image: "/paris.png", price: "R$ 3.890", duration: "7 dias", rating: 4.9, reviews: 128, tags: ["Europa", "Romântico", "Cultural"], highlight: "Torre Eiffel & Museu do Louvre", message: "Olá Joca! Tenho interesse no pacote Paris, França. Pode me passar mais informações?" },
+  { id: 2, name: "Cancún, México", emoji: "🏖️", image: "/cancun.png", price: "R$ 2.490", duration: "5 dias", rating: 4.8, reviews: 95, tags: ["Caribe", "Praia", "All Inclusive"], highlight: "Praias paradisíacas & Cenotes", message: "Olá Joca! Tenho interesse no pacote Cancún, México. Pode me passar mais informações?" },
+  { id: 3, name: "Rio de Janeiro, Brasil", emoji: "🌆", image: "/rio.png", price: "R$ 1.290", duration: "4 dias", rating: 4.7, reviews: 210, tags: ["Brasil", "Carnaval", "Natureza"], highlight: "Cristo Redentor & Pão de Açúcar", message: "Olá Joca! Tenho interesse no pacote Rio de Janeiro. Pode me passar mais informações?" },
+  { id: 4, name: "Lisboa, Portugal", emoji: "🏛️", image: "/lisboa.png", price: "R$ 4.200", duration: "8 dias", rating: 4.9, reviews: 76, tags: ["Europa", "História", "Gastronomia"], highlight: "Alfama & Belém", message: "Olá Joca! Tenho interesse no pacote Lisboa, Portugal. Pode me passar mais informações?" },
+  { id: 5, name: "Dubai, EAU", emoji: "🌇", image: "/dubai.png", price: "R$ 5.890", duration: "6 dias", rating: 4.8, reviews: 52, tags: ["Luxo", "Arquitetura", "Compras"], highlight: "Burj Khalifa & Desert Safari", message: "Olá Joca! Tenho interesse no pacote Dubai. Pode me passar mais informações?" },
+  { id: 6, name: "Fernando de Noronha", emoji: "🏝️", image: "/noronha.png", price: "R$ 3.100", duration: "5 dias", rating: 5.0, reviews: 164, tags: ["Brasil", "Natureza", "Mergulho"], highlight: "Baía dos Golfinhos & Enseada", message: "Olá Joca! Tenho interesse no pacote Fernando de Noronha. Pode me passar mais informações?" },
 ];
 
-function DestinationCard({
-  destination,
-  index,
-}: {
-  destination: (typeof destinations)[0];
-  index: number;
-}) {
+function DestinationCard({ destination }: { destination: (typeof destinations)[0] }) {
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(destination.message)}`;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+    <div
       className="destination-card"
       style={{
         background: "white",
@@ -126,36 +42,19 @@ function DestinationCard({
           alt={destination.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          style={{ objectFit: "cover", transition: "transform 0.6s ease" }}
-          onMouseOver={e => (e.currentTarget.style.transform = "scale(1.08)")}
-          onMouseOut={e => (e.currentTarget.style.transform = "scale(1)")}
+          style={{ objectFit: "cover" }}
         />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65), transparent 60%)" }} />
 
-        {/* Price badge */}
-        <div style={{
-          position: "absolute", top: "0.875rem", right: "0.875rem",
-          background: "var(--copper)", color: "white",
-          padding: "0.375rem 0.75rem", borderRadius: "9999px",
-          fontSize: "0.75rem", fontWeight: 700, boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-        }}>
+        <div style={{ position: "absolute", top: "0.875rem", right: "0.875rem", background: "var(--copper)", color: "white", padding: "0.375rem 0.75rem", borderRadius: "9999px", fontSize: "0.75rem", fontWeight: 700 }}>
           A partir de {destination.price}
         </div>
 
-        {/* Rating badge */}
-        <div style={{
-          position: "absolute", top: "0.875rem", left: "0.875rem",
-          background: "rgba(255,255,255,0.92)", backdropFilter: "blur(4px)",
-          padding: "0.3rem 0.625rem", borderRadius: "9999px",
-          fontSize: "0.75rem", fontWeight: 700,
-          display: "flex", alignItems: "center", gap: "0.25rem",
-          color: "var(--navy)", boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        }}>
+        <div style={{ position: "absolute", top: "0.875rem", left: "0.875rem", background: "rgba(255,255,255,0.92)", padding: "0.3rem 0.625rem", borderRadius: "9999px", fontSize: "0.75rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "0.25rem", color: "var(--navy)" }}>
           <Star size={11} fill="var(--copper)" style={{ color: "var(--copper)" }} />
           {destination.rating} ({destination.reviews})
         </div>
 
-        {/* Name on image */}
         <div style={{ position: "absolute", bottom: "0.75rem", left: "1rem", display: "flex", alignItems: "center", gap: "0.375rem" }}>
           <MapPin size={14} style={{ color: "white" }} />
           <p style={{ color: "white", fontWeight: 700, fontSize: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>
@@ -166,26 +65,19 @@ function DestinationCard({
 
       {/* Content */}
       <div style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1 }}>
-        {/* Highlight */}
         <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span style={{ fontSize: "1.125rem" }}>{destination.emoji}</span>
           {destination.highlight}
         </p>
 
-        {/* Tags */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
           {destination.tags.map((tag) => (
-            <span key={tag} style={{
-              background: "var(--copper-pale)", color: "var(--copper)",
-              fontSize: "0.72rem", fontWeight: 600,
-              padding: "0.25rem 0.625rem", borderRadius: "9999px",
-            }}>
+            <span key={tag} style={{ background: "var(--copper-pale)", color: "var(--copper)", fontSize: "0.72rem", fontWeight: 600, padding: "0.25rem 0.625rem", borderRadius: "9999px" }}>
               {tag}
             </span>
           ))}
         </div>
 
-        {/* Info row */}
         <div style={{ display: "flex", gap: "1.25rem" }}>
           <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.75rem", color: "var(--text-muted)" }}>
             <Clock size={12} /> {destination.duration}
@@ -195,64 +87,33 @@ function DestinationCard({
           </span>
         </div>
 
-        {/* CTA */}
         <div style={{ borderTop: "1px solid var(--cream)", paddingTop: "0.875rem", marginTop: "auto" }}>
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             id={`whatsapp-dest-${destination.id}`}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.5rem",
-              width: "100%",
-              background: "var(--copper)",
-              color: "white",
-              padding: "0.75rem 1rem",
-              borderRadius: "0.75rem",
-              fontWeight: 700,
-              fontSize: "0.875rem",
-              transition: "all 0.3s",
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-            onMouseOver={e => {
-              (e.currentTarget as HTMLElement).style.background = "var(--copper-light)";
-              (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 20px rgba(160,112,58,0.3)";
-            }}
-            onMouseOut={e => {
-              (e.currentTarget as HTMLElement).style.background = "var(--copper)";
-              (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "none";
-            }}
+            className="dest-btn"
           >
             <WhatsAppIcon size={16} />
             Solicitar via WhatsApp
           </a>
         </div>
       </div>
-    </motion.div>
+      <style>{`
+        .dest-btn { display:flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; background:var(--copper); color:white; padding:0.75rem 1rem; border-radius:0.75rem; font-weight:700; font-size:0.875rem; transition:background 0.2s,transform 0.2s; text-decoration:none; }
+        .dest-btn:hover { background:var(--copper-light); transform:scale(1.02); }
+      `}</style>
+    </div>
   );
 }
 
 export default function Destinations() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-
   return (
     <section id="destinos" style={{ background: "var(--gray-soft)", width: "100%" }} className="jv-section">
       <div className="jv-wrap">
         {/* Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          className="section-header"
-        >
+        <div className="section-header">
           <span className="jv-badge" style={{ marginBottom: "1rem", display: "inline-flex" }}>✈️ Destinos em Destaque</span>
           <h2 className="jv-title">Onde você quer ir?</h2>
           <p className="section-subtitle">
@@ -260,57 +121,33 @@ export default function Destinations() {
             passagem, hotel e assistência personalizada.
           </p>
           <div className="section-divider" />
-        </motion.div>
+        </div>
 
         {/* Cards Grid */}
         <div className="jv-grid-3">
-          {destinations.map((dest, i) => (
-            <DestinationCard key={dest.id} destination={dest} index={i} />
+          {destinations.map((dest) => (
+            <DestinationCard key={dest.id} destination={dest} />
           ))}
         </div>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          style={{ textAlign: "center", marginTop: "3.5rem" }}
-        >
+        <div style={{ textAlign: "center", marginTop: "3.5rem" }}>
           <p style={{ color: "var(--text-muted)", marginBottom: "1rem" }}>Não achou o destino que queria?</p>
           <a
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Olá Joca! Quero saber sobre outros destinos que vocês trabalham!")}`}
             target="_blank"
             rel="noopener noreferrer"
             id="more-destinations-whatsapp"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              border: "2px solid var(--copper)",
-              color: "var(--copper)",
-              padding: "0.875rem 2rem",
-              borderRadius: "9999px",
-              fontWeight: 700,
-              fontSize: "0.9375rem",
-              transition: "all 0.3s",
-              cursor: "pointer",
-            }}
-            onMouseOver={e => {
-              (e.currentTarget as HTMLElement).style.background = "var(--copper)";
-              (e.currentTarget as HTMLElement).style.color = "white";
-              (e.currentTarget as HTMLElement).style.transform = "scale(1.04)";
-            }}
-            onMouseOut={e => {
-              (e.currentTarget as HTMLElement).style.background = "transparent";
-              (e.currentTarget as HTMLElement).style.color = "var(--copper)";
-              (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-            }}
+            className="dest-outline-btn"
           >
             Consulte outros destinos pelo WhatsApp
           </a>
-        </motion.div>
+        </div>
       </div>
+      <style>{`
+        .dest-outline-btn { display:inline-flex; align-items:center; gap:0.5rem; border:2px solid var(--copper); color:var(--copper); padding:0.875rem 2rem; border-radius:9999px; font-weight:700; font-size:0.9375rem; transition:all 0.3s; text-decoration:none; }
+        .dest-outline-btn:hover { background:var(--copper); color:white; transform:scale(1.04); }
+      `}</style>
     </section>
   );
 }
